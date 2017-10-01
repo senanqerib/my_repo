@@ -87,7 +87,7 @@ else  {
         {
         count++;
         }
-        if (count > 0)
+        if (count > 0 && pass1.equals(pass2))
         {
         PreparedStatement stmt=con.prepareStatement(user_update_query);
         stmt.setString(1, uname); 
