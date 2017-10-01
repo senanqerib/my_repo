@@ -81,6 +81,38 @@ else  {
                             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                              <link rel="stylesheet" href="css/style.css">
                             <title>Edit User</title>
+           <script type="text/javascript">
+            function checkPass()
+            {
+                //Store the password field objects into variables ...
+                var pass1 = document.getElementById('pass1');
+                var pass2 = document.getElementById('pass2');
+                //Store the Confimation Message Object ...
+                var message = document.getElementById('confirmMessage');
+                //Set the colors we will be using ...
+                var goodColor = "#66cc66";
+                var badColor = "#ff6666";
+                //Compare the values in the password field 
+                //and the confirmation field
+                if(pass1.value === pass2.value){
+                    //The passwords match. 
+                    //Set the color to the good color and inform
+                    //the user that they have entered the correct password 
+                    pass2.style.backgroundColor = goodColor;
+                    message.style.color = goodColor;
+                    message.innerHTML = "Passwords Match!";
+                    return true;
+                }else{
+                    //The passwords do not match.
+                    //Set the color to the bad color and
+                    //notify the user.
+                    pass2.style.backgroundColor = badColor;
+                    message.style.color = badColor;
+                    message.innerHTML = "Passwords Do Not Match!";
+                    return false;
+                }
+            }  
+            </script>
                         </head>
                         <body>
                             <form method="post" action="update_user.jsp">
@@ -89,9 +121,11 @@ else  {
                                     <input class="name" type="text"     name="lname" value="<%=lname%>" placeholder="Last Name" readOnly />
                                     <input class="name" type="text"     name="email" value="<%=email%>" placeholder="Email"  required/>
                                     <input class="name" type="text"     name="uname" value="<%=user_name%>" placeholder="User Name" readOnly/>
-                                    <input class="pw"   type="password" name="pass"  value="" placeholder="Password"  required/>
-
-                                    <input class="button" type="submit" value="Update" />
+                                    <input class="pw"   type="password" name="pass"  value="" placeholder="Current Password"  required/>
+                                    <input class="pw"   type="password" name="pass1" id="pass1" value="" placeholder="Type New Password"  required/>
+                                    <input class="pw"   type="password" name="pass2" id="pass2" value="" placeholder="Retype New Password"  required onkeyup="checkPass(); return false;"/>
+                                    <span id="confirmMessage" ></span>
+                                    <input class="button" type="submit" value="Update" onclick="return checkPass();" />
                             </form>
                         </body>
                     </html>
