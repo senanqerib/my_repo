@@ -42,15 +42,21 @@ else  {
     
     if (request.getParameterMap().containsKey("fname") && request.getParameterMap().containsKey("lname") && 
             request.getParameterMap().containsKey("uname") && request.getParameterMap().containsKey("email")
-            && ((request.getParameter("pass").toString()!="") && request.getParameter("pass").toString()!= null ) )
+            && ((request.getParameter("pass").toString()!="") && request.getParameter("pass").toString()!= null )
+            && ((request.getParameter("pass1").toString()!="") && request.getParameter("pass1").toString()!= null )
+            && ((request.getParameter("pass2").toString()!="") && request.getParameter("pass2").toString()!= null ))
 {       
     try {
-        String uname= request.getParameter("uname");
-        String fname= request.getParameter("fname");
-        String lname= request.getParameter("lname");
-        String email= request.getParameter("email");
-        String pass = request.getParameter("pass");
-    
+        String uname = request.getParameter("uname");
+        String fname = request.getParameter("fname");
+        String lname = request.getParameter("lname");
+        String email = request.getParameter("email");
+        String pass  = request.getParameter("pass");
+        String pass1 = request.getParameter("pass1");
+        String pass2 = request.getParameter("pass2");
+        
+        String query_password="select pass from members where pass=password(?)";
+            
         //String username = session.getAttribute("userid").toString(); 
         String user_update_query = "update members  set uname=?, first_name=?, last_name=?, email=?, pass=password(?) where uname=? ";   
 
@@ -73,12 +79,22 @@ else  {
     Connection con =DriverManager.getConnection(url, username, password);
     
     
+        PreparedStatement stmt_q=con.prepareStatement(query_password);
+        stmt_q.setString(1, pass);
+        ResultSet rs_p = stmt_q.executeQuery();
+        int count=0;
+        while(rs_p.next())
+        {
+        count++;
+        }
+        if (count > 0)
+        {
         PreparedStatement stmt=con.prepareStatement(user_update_query);
         stmt.setString(1, uname); 
         stmt.setString(2, fname);
         stmt.setString(3, lname);
         stmt.setString(4, email);
-        stmt.setString(5, pass);
+        stmt.setString(5, pass1);
         stmt.setString(6, uname);
 
    
@@ -87,25 +103,41 @@ else  {
 
         int i=stmt.executeUpdate();
         if (i>0)
-        {
-            out.println("user updated <br><br>");
-            out.println("<a href='edit_user.jsp'>Back to user edit page </a>");
-            //response.sendRedirect("edit_user.jsp");
+        {%>
+             <script type="text/javascript">
+                alert("Password Changed! Go to Home Page ...");
+                window.location.href='success.jsp';
+              </script>
+         <%
+            
         }
-        else {
-            out.println("Error: user not updated  <br><br>");
-            out.println("<a href='edit_user.jsp'>Back to user edit page </a>");
-        }
+        else 
+        {%>
+             <script type="text/javascript">
+                 alert("Error: Password didn't change");
+                  window.history.back();
+              </script>
+         <%        
+          }
+        stmt.close();
+        stmt_q.close();
     }
         catch(Exception e)
         { 
             out.println(e);
         }
     
-finally {
-    try { stmt.close(); } catch (Exception e) { out.println(e); }
-    try { con.close();  } catch (Exception e) { out.println(e); }
-} 
+    
+ 
+    }
+        else 
+        {%>
+            <script type="text/javascript">
+                alert("Current password is wrong!");
+                window.history.back();
+              </script>
+         <%           
+        }
     }
     catch (Exception e)
             {
@@ -113,8 +145,12 @@ finally {
             }
 }
     else  {
-    out.println("Password is empty! Please, fill  password field <br><br>");
-    out.println("<a href='edit_user.jsp'>Back to user edit page </a>");
+%>
+             <script type="text/javascript">
+    alert("Password is empty! Please, fill  password field");
+    window.history.back();
+              </script>
+         <%       
     }
 }
 %>
