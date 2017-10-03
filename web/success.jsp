@@ -1,7 +1,7 @@
 <%-- 
     Document   : success
     Created on : Sep 5, 2017, 4:56:35 PM
-    Author     : qeribli_s
+    Author     : Sanan Garibli
 --%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
@@ -16,10 +16,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-   <link rel="stylesheet" href="css/style_table.css">
+  
+  <title>Home Page</title>
+  <link rel="stylesheet" href="css/style_table.css">
+  <jsp:include page="header.jsp" />
 </head>
-</html>
+
 
 
 <%!
@@ -65,32 +67,26 @@ return date_long;
     if ((session.getAttribute("userid") == null) || (session.getAttribute("userid") == "")) {        
         response.sendRedirect("index.jsp");    
     } else {
+        
+       int USER_TYPE = Integer.parseInt(session.getAttribute("USER_TYPE").toString());
 
 %>
-<p align="right"> Welcome <%=session.getAttribute("userid")%>
-<a href='success.jsp'>Home</a> 
-&nbsp;&nbsp;
-<a href='certificate.jsp?action=add'>Add Certificate</a> 
-&nbsp;&nbsp;
-<a href="reg.jsp">Add new user</a>
-&nbsp;&nbsp;
-<a href="edit_user.jsp">Edit user</a>
-&nbsp;&nbsp;
-<a href='logout.jsp'>Log out</a>
-</p>
+
 
 <%
-         String id = "%";
-         String cn = "%";
-         String expiry_date = "%";
-         String server_name = "%";
-         String server_ip = "%";
-         String server_owner = "%";
-         String algorithm = "%";
-         String bit_length = "%";
-         String type = "%";
-         String phone = "%";
-         String description = "%";
+         String id = "";
+         String cn = "";
+         String expiry_date = "";
+         String server_name = "";
+         String server_ip = "";
+         String server_owner = "";
+         String algorithm = "";
+         String bit_length = "";
+         String type = "";
+         String phone = "";
+         String description = "";
+         boolean expired;
+         boolean expiring;
          
          
         if (request.getParameter("id") != null) {           id =                        request.getParameter("id"); }
@@ -104,7 +100,7 @@ return date_long;
         if (request.getParameter("type") != null) {         type =                      request.getParameter("type"); }
         if (request.getParameter("phone") != null) {        phone =                     request.getParameter("phone"); }
         if (request.getParameter("description") != null) {  description =               request.getParameter("description"); }
-               
+        
     
  try { 
         
@@ -124,38 +120,53 @@ return date_long;
     
     Class.forName(driver);
     Connection con =DriverManager.getConnection(url, username, password);
-    String select_query = "SELECT  ID,  CN,  EXPIRY_DATE,  SERVER_NAME,  IP,  DESCRIPTION,  ALGORITHM,  BIT_LENGTH,  TYPE,  "
-            + "NOTIFY,  PHONE,  NOTIFIED_COUNT,  SERVER_OWNER "            
+    
+    String select_query =  "SELECT  ID,  CN,  EXPIRY_DATE,  SERVER_NAME,  IP,  DESCRIPTION,  ALGORITHM,  BIT_LENGTH,  TYPE,  "
+            + "NOTIFY,  PHONE,  NOTIFIED_COUNT,  SERVER_OWNER "
             + "FROM CERTS "
-            + "WHERE ID LIKE ? AND CN LIKE ? AND EXPIRY_DATE LIKE ? AND SERVER_NAME LIKE ? AND IP LIKE ? AND  DESCRIPTION LIKE ?  "
-            + "AND ALGORITHM LIKE ? AND  BIT_LENGTH LIKE ? AND  TYPE LIKE ? AND  PHONE LIKE ? AND SERVER_OWNER LIKE ?";
-
-    
-    PreparedStatement stmt = con.prepareStatement(select_query);
-    stmt.setString(1, "%" + id + "%");
-    stmt.setString(2, "%" + cn + "%");
-    stmt.setString(3, "%" + expiry_date + "%");
-    stmt.setString(4, "%" + server_name + "%");
-    stmt.setString(5, "%" + server_ip + "%");
-    stmt.setString(6, "%" + description + "%");
-    stmt.setString(7, "%" + algorithm + "%");
-    stmt.setString(8, "%" + bit_length + "%");
-    stmt.setString(9, "%" + type + "%");
-    stmt.setString(10,"%" + phone + "%");
-    stmt.setString(11,"%" + server_owner + "%");
-    
-    
+            + "WHERE ID LIKE ? AND CN LIKE ? AND EXPIRY_DATE LIKE ? AND SERVER_NAME LIKE ? AND IP LIKE ? AND DESCRIPTION LIKE ? AND ALGORITHM LIKE ? AND BIT_LENGTH LIKE ? AND "
+            + "TYPE LIKE ? AND PHONE LIKE ? AND SERVER_OWNER LIKE ?";
+ 
+     expiring = request.getParameter("expiring" ) != null;
+     expired  = request.getParameter("expired"  ) != null;
      
-    ResultSet rs = stmt.executeQuery();
+     if (expiring && expired)
+    {
     
-    %>
+        select_query = select_query +" AND (SUBDATE(STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y'),31) <= NOW() OR SUBDATE(STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y'),0) < NOW()) ORDER BY STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y') ";
+    }
+     else if (expiring)
+     {
+        select_query = select_query +" AND SUBDATE(STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y'),31) <= NOW() AND  SUBDATE(STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y'),0) > NOW()  ORDER BY STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y') ";
+     }
+     else if (expired)
+     {
+        select_query = select_query +" AND  SUBDATE(STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y'),0) < NOW()  ORDER BY STR_TO_DATE(EXPIRY_DATE,'%d/%m/%Y') ";
+  
+     }
+
+        PreparedStatement stmt = con.prepareStatement(select_query);
+        stmt.setString(1, "%" + id + "%");
+        stmt.setString(2, "%" + cn + "%");
+        stmt.setString(3, "%" + expiry_date + "%");
+        stmt.setString(4, "%" + server_name + "%");
+        stmt.setString(5, "%" + server_ip + "%");
+        stmt.setString(6, "%" + description + "%");
+        stmt.setString(7, "%" + algorithm + "%");
+        stmt.setString(8, "%" + bit_length + "%");
+        stmt.setString(9, "%" + type + "%");
+        stmt.setString(10, "%" + phone + "%");
+        stmt.setString(11, "%" + server_owner + "%");
+        
+        ResultSet rs = stmt.executeQuery();
+%>
  
     <FORM id="cert" name="certs" method="POST" ACTION="#" >
         <table class="responsive-table">
             <tr>
 
                 <td>   </td>  
-                <td>   </td> 
+                <td></td> 
                 <td><b> ID  </td> 
                 <td><b> Certificate Name  </b> </td> 
                 <td><b> Expiry Date  </b> </td> 
@@ -168,16 +179,13 @@ return date_long;
                 <td><b> Phone </b> </td> 
                 <td><b> Description  </b> </td>
                 </b>
-            </tr>
+            </tr> 
             
            <tr>
                
                 
-
-                <td></td>  
-                <td><input type="submit" value="Filter"
-                            style="position: absolute; left: -9999px; width: 1px; height: 1px;"
-                            tabindex="-1" /></td> 
+               <td><input id="expired" name="expired" type="checkbox" onclick="this.form.submit();" title="Show Expired Certificates" <% if (expired) {%> checked <% } %>></td>  
+                <td> <input id="expiring" name="expiring" type="checkbox" onclick="this.form.submit();" title="Soon Expiring Certificates" <% if (expiring) {%> checked <% } %>> <input type="submit" value="Filter" style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1" /></td> 
                 <td> <input name="id" size="4" value="<%=id %>" /> </td> 
                 <td> <input name="cn" size="12" value="<%=cn %>"/> </td> 
                 <td> <input name="expiry_date" size="12" value="<%=expiry_date %>"/> </td> 
@@ -212,7 +220,7 @@ return date_long;
                 color="#ffbf00";
             } 
             
-             else if ( ((Convert_to_longint(rs.getString("EXPIRY_DATE"))-ToDay())/86400000 > 20) &&  ((Convert_to_longint(rs.getString("EXPIRY_DATE"))-ToDay())/86400000 <= 60)) 
+             else if ( ((Convert_to_longint(rs.getString("EXPIRY_DATE"))-ToDay())/86400000 > 20) &&  ((Convert_to_longint(rs.getString("EXPIRY_DATE"))-ToDay())/86400000 <= 30)) 
             {
                 color="#ffbf00";
             }
@@ -236,7 +244,7 @@ return date_long;
                 <td> <%=rs.getString("DESCRIPTION")%>  </td>
             </tr>
                  
-                 <% 
+            <% 
             
 
     }
@@ -245,13 +253,19 @@ return date_long;
 }
 catch (Exception e)
 {
-out.println("Error: " +e.toString());
+       String error=e.toString();
+         %>
+               <script type="text/javascript">
+                   alert("Error: <%=error%>");
+               </script>
+        <%
 }
  
 
     %>
    </table>
     </FORM>
+</html>
 <%
 
 

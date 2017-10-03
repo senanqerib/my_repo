@@ -170,7 +170,7 @@ a:hover, a:focus {
   }
 }
 .responsive-table tbody th[scope="row"] {
-  background-color: #1d96b2;
+  background-color: #2c3e50;
   color: white;
 }
 @media (min-width: 48em) {

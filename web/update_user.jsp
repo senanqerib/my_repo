@@ -24,20 +24,11 @@
                     
 <%
   if ((session.getAttribute("userid") == null) || (session.getAttribute("userid") == "")) {
-
   response.sendRedirect("index.jsp");
   }
 else  {
 %>
-<p align="right"> Welcome <%=session.getAttribute("userid")%>
-<a href='success.jsp'>Home</a> 
-&nbsp;&nbsp;
-<a href="reg.jsp">Add new user</a>
-&nbsp;&nbsp;
-<a href="edit_user.jsp">Edit user</a>
-&nbsp;&nbsp;
-<a href='logout.jsp'>Log out</a>
-</p>
+<jsp:include page="header.jsp" />
 <%  
     
     if (request.getParameterMap().containsKey("fname") && request.getParameterMap().containsKey("lname") && 
@@ -55,11 +46,10 @@ else  {
         String pass1 = request.getParameter("pass1");
         String pass2 = request.getParameter("pass2");
         
-        String query_password="select pass from members where pass=password(?)";
+        String query_password="select pass from USERS where pass=password(?)";
             
         //String username = session.getAttribute("userid").toString(); 
-        String user_update_query = "update members  set uname=?, first_name=?, last_name=?, email=?, pass=password(?) where uname=? ";   
-
+        String user_update_query = "update USERS  set uname=?, first_name=?, last_name=?, email=?, pass=password(?) where uname=? ";   
     
     String url = "";
     String driver = "";
@@ -96,11 +86,9 @@ else  {
         stmt.setString(4, email);
         stmt.setString(5, pass1);
         stmt.setString(6, uname);
-
    
     try
         {         
-
         int i=stmt.executeUpdate();
         if (i>0)
         {%>
@@ -124,7 +112,12 @@ else  {
     }
         catch(Exception e)
         { 
-            out.println(e);
+                  String error=e.toString();
+         %>
+               <script type="text/javascript">
+                   alert("Error: <%=error%>");
+               </script>
+        <%
         }
     
     
@@ -141,20 +134,21 @@ else  {
     }
     catch (Exception e)
             {
-            out.println("Connection failed:" +e.toString());
+                   String error=e.toString();
+         %>
+               <script type="text/javascript">
+                   alert("Database connection error: <%=error%>");
+               </script>
+        <%
             }
 }
     else  {
 %>
              <script type="text/javascript">
-    alert("Password is empty! Please, fill  password field");
-    window.history.back();
+                alert("Password is empty! Please, fill  password field");
+                window.history.back();
               </script>
          <%       
     }
 }
 %>
-
-
-
-

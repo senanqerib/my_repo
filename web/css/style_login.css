@@ -8,10 +8,11 @@ body {
   background:#2c3e50; 
 }
 
+
 form {
   position:relative;
   width:360px;
-  height:615px;
+  height:230px;
   margin:50px auto;
   text-align:center;
   background:#ecf0f1;
@@ -24,6 +25,7 @@ form {
           box-shadow: 0px 1px 0px #ad392d, inset 0px 1px 0px white;
   box-shadow: 20px 20px 20px;
 }
+
 
 h4 {
   font-family: 'Source Sans Pro', sans-serif;
@@ -54,6 +56,7 @@ input:focus {
 
 
 
+
 p, p:visited {
   text-decoration:none;
   color:#7f8c8d;
@@ -63,8 +66,6 @@ p, p:visited {
      -moz-transition: all .3s ease-in-out;
           transition: all .3s ease-in-out;
 }
-
-
 
 .button {
   position:relative;

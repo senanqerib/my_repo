@@ -1,7 +1,7 @@
 <%-- 
     Document   : success
     Created on : Sep 5, 2017, 4:56:35 PM
-    Author     : qeribli_s
+    Author     : Sanan Garibli
 --%>
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.File"%>
@@ -11,6 +11,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <title>Update Page</title>
 </head>
 </html>
 
@@ -23,15 +24,7 @@ if ((session.getAttribute("userid") == null) || (session.getAttribute("userid") 
  } 
 else {
 %>
-<p align="right"> Welcome <%=session.getAttribute("userid")%>
-<a href='success.jsp'>Home</a> 
-&nbsp;&nbsp;
-<a href="reg.jsp">Add new user</a>
-&nbsp;&nbsp;
-<a href="edit_user.jsp">Edit user</a>
-&nbsp;&nbsp;
-<a href='logout.jsp'>Log out</a>
-</p>
+<jsp:include page="header.jsp" />
 <%
 if (request.getParameterMap().containsKey("id") && request.getParameterMap().containsKey("cn") && request.getParameterMap().containsKey("expiry_date") && request.getParameterMap().containsKey("ip"))
 {
@@ -96,8 +89,7 @@ if (request.getParameterMap().containsKey("id") && request.getParameterMap().con
         <%
         } 
 
-stmt.close();        
-con.close();
+        con.close();
 
         response.sendRedirect("certificate.jsp?action=edit&id="+cert_id);
     }

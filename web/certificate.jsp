@@ -1,7 +1,7 @@
 <%-- 
     Document   : certificate.jsp
     Created on : Sep 12, 2017, 4:56:35 PM
-    Author     : qeribli_s
+    Author     : Sanan Garibli
 --%>
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.File"%>
@@ -10,9 +10,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Certificate Page</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/style_add_cert.css">
-  <script type="text/javascript" src="js/script.js"></script>
+  <jsp:include page="header.jsp" />
+  
 <script type="text/javascript">
 function check_expiry_date()
 {
@@ -49,19 +51,8 @@ function check_expiry_date()
     } 
     
     else {
-%>
-<a><p align="right"> Welcome <%=session.getAttribute("userid")%></a>
-<a href='success.jsp'>Home</a> 
-&nbsp;&nbsp;
-<a href="reg.jsp">Add new user</a>
-&nbsp;&nbsp;
-<a href="edit_user.jsp">Edit user</a>
-&nbsp;&nbsp;
-<a href='logout.jsp'>Log out</a>
-</p>
+       int USER_TYPE = Integer.parseInt(session.getAttribute("USER_TYPE").toString());
 
-
-<%
 try {
     String url = "";
     String driver = "";
@@ -124,8 +115,6 @@ if (request.getParameterMap().containsKey("action"))
         </form>
 <% 
 }
-stmt.close();
-con.close();
 }
         catch(Exception e)
         {
@@ -267,12 +256,11 @@ else if (action.equals("delete") && cert_id.length()>0)  // delete SQL
 
 else //if (!request.getParameterMap().containsKey("id") && request.getParameterMap().containsKey("action"))
 {
-out.println("CN, EXPIRY_DATE, SERVER_NAME, IP,DESCRIPTION,  ALGORITHM, BIT_LENGTH,  TYPE, PHONE are mandatory parameters!");
-         %> <!--
-               <script type="text/javascript">
-                   alert("CN, EXPIRY_DATE, SERVER_NAME, IP,DESCRIPTION,  ALGORITHM, BIT_LENGTH,  TYPE, PHONE are mandatory parameters!");
-               </script>
-            -->
+       %> 
+<script type="text/javascript">
+   alert("CN, EXPIRY_DATE, SERVER_NAME, IP,DESCRIPTION,  ALGORITHM, BIT_LENGTH,  TYPE, PHONE are mandatory parameters!");
+</script>
+           
         <%
 }
 
@@ -280,7 +268,13 @@ out.println("CN, EXPIRY_DATE, SERVER_NAME, IP,DESCRIPTION,  ALGORITHM, BIT_LENGT
 
 catch (Exception e) 
 {
-out.println("database connection error:" +e.toString());
+       String error=e.toString();
+         %>
+               <script type="text/javascript">
+                   alert("database connection error: <%=error%>");
+               </script>
+        <%
+
 }
 
 

@@ -1,7 +1,7 @@
 <%-- 
     Document   : login
     Created on : Sep 5, 2017, 4:56:10 PM
-    Author     : qeribli_s
+    Author     : Sanan Garibli
 --%>
 
 
@@ -37,27 +37,39 @@
     Class.forName(driver);
     Connection con =DriverManager.getConnection(url, username, password);
     
-    PreparedStatement stmt = con.prepareStatement("select * from members where uname=? and pass=password(?)");
+    PreparedStatement stmt = con.prepareStatement("select uname, IFNULL(TYPE,2) TYPE from USERS where status=0 and uname=? and pass=password(?)");
     stmt.setString(1, userid);
     stmt.setString(2, pwd);
     ResultSet rs;
     rs = stmt.executeQuery();
     if (rs.next()) {
         session.setAttribute("userid", userid);
-        //out.println("welcome " + userid);
-        //out.println("<a href='logout.jsp'>Log out</a>");
+        session.setAttribute("USER_TYPE", rs.getInt("TYPE"));
         response.sendRedirect("success.jsp");
         }
     
     
     else {
-        out.println("Invalid password <a href='index.jsp'>Try again</a>");
+        
+        %>
+              <script type="text/javascript">
+                alert("Incorrect username or password ");
+                 window.location.href='index.jsp';
+                document.getElementById("uname").focus();
+              </script>
+          
+  <%
     }
     stmt.close();
     con.close();
     }
     catch (Exception e)
     {
-    out.println(e.toString());
+           String error=e.toString();
+         %>
+               <script type="text/javascript">
+                   alert("Error: <%=error%>");
+               </script>
+        <%
     }
 %>

@@ -1,3 +1,13 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 2, 2017, 1:19:32 PM
+    Author     : qeribli_s
+*/
+
 * {
   margin:0;
   padding:0;
@@ -8,10 +18,11 @@ body {
   background:#2c3e50; 
 }
 
+
 form {
   position:relative;
   width:360px;
-  height:615px;
+  height:440px;
   margin:50px auto;
   text-align:center;
   background:#ecf0f1;
@@ -24,6 +35,7 @@ form {
           box-shadow: 0px 1px 0px #ad392d, inset 0px 1px 0px white;
   box-shadow: 20px 20px 20px;
 }
+
 
 h4 {
   font-family: 'Source Sans Pro', sans-serif;
@@ -48,9 +60,24 @@ input {
   font-size:16px;
 }
 
+select {
+  display:block;
+  width:345px;
+  padding:14px;
+  -webkit-border-radius:6px;
+     -moz-border-radius:6px;
+          border-radius:6px;
+  border:0;
+  margin-bottom:12px;
+  color:#7f8c8d;
+  font-weight:600;
+  font-size:16px;
+}
+
 input:focus {
   background:#fafafa;
 }
+
 
 
 
@@ -63,8 +90,6 @@ p, p:visited {
      -moz-transition: all .3s ease-in-out;
           transition: all .3s ease-in-out;
 }
-
-
 
 .button {
   position:relative;
