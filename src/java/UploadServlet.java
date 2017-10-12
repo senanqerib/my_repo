@@ -77,9 +77,9 @@ public class UploadServlet extends HttpServlet {
             FileItem fi = (FileItem)i.next();
             if ( !fi.isFormField () ) {
                // Get the uploaded file parameters
-               String fieldName = fi.getFieldName();
+               String fieldName = fi.getFieldName(); 
                String fileName = fi.getName();
-               String contentType = fi.getContentType();
+               String contentType = fi.getContentType(); 
                boolean isInMemory = fi.isInMemory();
                long sizeInBytes = fi.getSize();
             
@@ -90,7 +90,7 @@ public class UploadServlet extends HttpServlet {
                   file = new File( filePath + fileName.substring(fileName.lastIndexOf("\\")+1)) ;
                }
                fi.write( file ) ;
-               out.println("Uploaded Filename: " + fileName + "<br>");
+               out.println("Uploaded Filename: " + file + "<br>");
             }
          }
          out.println("</body>");
