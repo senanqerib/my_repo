@@ -14,6 +14,7 @@
 <ul>
    <li class='active'><a href='success.jsp'><span>Home</span></a></li>
    <li class='hover'><a href='certificate.jsp?action=add'><span>Add Certificate</span></a></li>
+      <li class='hover'><a href='upload_cert.jsp?action=add'><span>Upload Certificate</span></a></li>
    <li><a href='reg.jsp'><span>Add New User</span></a></li>
    <li><a href='edit_user.jsp'><span>Edit User</span></a></li>
    <li><a href='sms_history.jsp'><span>SMS History</span></a></li>
