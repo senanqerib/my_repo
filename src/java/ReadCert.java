@@ -1,5 +1,3 @@
-package readcert;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,26 +22,30 @@ import javax.net.ssl.KeyManagerFactory;
 public class ReadCert {
 
     // Certificate file extensions: *.pem, *.der, *.cer, *.crt
-   public static void Read_PEM_DER_Cert(String cert_file) throws FileNotFoundException, IOException, CertificateException
+   public String[] Read_PEM_DER_Cert(String cert_file) throws FileNotFoundException 
    {
        try 
        {    
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         X509Certificate cert = (X509Certificate)cf.generateCertificate(new FileInputStream(cert_file));
-        System.out.println("NotBefore: " +cert.getNotBefore());
-        System.out.println("NotAfter: " +cert.getNotAfter());
-        System.out.println("SigAlgName: " +cert.getSigAlgName());
-        System.out.println("Type: " +cert.getType());
-        System.out.println("SerialNumber: " +cert.getSerialNumber());
-        System.out.println("SubjectDN: " +cert.getSubjectDN());
-        System.out.println("Version: " +cert.getVersion());
+        String[] result;
+        result = new String[10];
         
-     
+        result[0]= cert.getNotBefore().toString();
+        result[1]= cert.getNotAfter().toString();
+        result[2]= cert.getSigAlgName();
+        result[3]= cert.getType();
+        result[4]= cert.getSerialNumber().toString();
+        result[5]= cert.getSubjectDN().getName();        
+        
+        return result;
          }
        catch( CertificateException e)
        {
        System.out.println(e.toString());
+       return null;
        }
+       
  }      
       
    // Certificate file extensions: *.pfx, *.p12, *.cer, *.crt
@@ -77,7 +79,7 @@ public class ReadCert {
     }
    
  // Certificate file extensions: *.p7b, *.p7c, *.cer, *.crt
-public void Read_PKCS7_Cert(String cert_file) throws FileNotFoundException, CertificateException
+public String[] Read_PKCS7_Cert(String cert_file) throws FileNotFoundException, CertificateException
  {       
  try {
     File file = new File(cert_file);
@@ -85,19 +87,23 @@ public void Read_PKCS7_Cert(String cert_file) throws FileNotFoundException, Cert
     CertificateFactory cf = CertificateFactory.getInstance("X.509");
     Collection c = cf.generateCertificates(fis);
     Iterator i = c.iterator();
+      String[] result;
+      result = new String[10];
     while (i.hasNext()) {
-      X509Certificate cert509 = (X509Certificate) i.next();
-      System.out.println("IssuerDN: " + cert509.getIssuerDN());
-      System.out.println("NotAfter: " + cert509.getNotAfter());
-      System.out.println("SerialNumber: " + cert509.getSerialNumber());
-      System.out.println("SigAlgName: " + cert509.getSigAlgName());
-      System.out.println("IssuerUniqueID: " + Arrays.toString(cert509.getIssuerUniqueID()));
-      System.out.println("Signature: " + Arrays.toString(cert509.getSignature()));
-      System.out.println("SubjectDN: " + cert509.getSubjectDN());
+      X509Certificate cert = (X509Certificate) i.next();
+      
+        result[0]= cert.getNotBefore().toString();
+        result[1]= cert.getNotAfter().toString();
+        result[2]= cert.getSigAlgName();
+        result[3]= cert.getType();
+        result[4]= cert.getSerialNumber().toString();
+        result[5]= cert.getSubjectDN().getName();
     }
+    return result;
   }
   catch (FileNotFoundException | CertificateException th) {
       System.out.println(th.toString());
+      return null;
   }
  }
 

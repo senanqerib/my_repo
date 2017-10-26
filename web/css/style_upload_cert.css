@@ -22,7 +22,7 @@ body {
 form {
   position:relative;
   width:360px;
-  height:220px;
+  height:270px;
   margin:50px auto;
   text-align:center;
   background:#ecf0f1;
@@ -93,7 +93,7 @@ p, p:visited {
 
 select {
   display:block;
-  width:315px;
+  width:340px;
   padding:14px;
   -webkit-border-radius:6px;
      -moz-border-radius:6px;

@@ -66,6 +66,7 @@
     catch (Exception e)
     {
            String error=e.toString();
+           out.println(error);
          %>
                <script type="text/javascript">
                    alert("Error: <%=error%>");
