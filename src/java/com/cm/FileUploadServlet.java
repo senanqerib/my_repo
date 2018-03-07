@@ -1,3 +1,5 @@
+package com.cm;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -98,6 +100,11 @@ protected void processRequest(HttpServletRequest request,
                         
                 }
                 
+                if (a == null)
+                {
+                    writer.println("Invalid Certificate Type or Coppupted Certificate File" );
+                    writer.println("<li><a hrep='upload_cert.jsp'> Return Back </a></li>");
+                }
                        
             //////////////////////////////////
            

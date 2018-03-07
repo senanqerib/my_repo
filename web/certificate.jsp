@@ -6,6 +6,7 @@
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.File"%>
 <%@page import="java.util.Properties"%>
+<%@page import="com.cm.DbConnect"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -54,22 +55,8 @@ function check_expiry_date()
        int USER_TYPE = Integer.parseInt(session.getAttribute("USER_TYPE").toString());
 
 try {
-    String url = "";
-    String driver = "";
-    String username = "";
-    String password = "";
-    Properties    props = new Properties();
-      
-    
-    props.load(new FileInputStream(getServletContext().getRealPath("/") + File.separator + "conf" + File.separator + "config.properties"));
-    
-    driver =    props.getProperty("driver").trim();
-    url =       props.getProperty("url").trim();
-    username =  props.getProperty("username").trim();
-    password =  props.getProperty("password").trim();
-    
-    Class.forName(driver);
-    Connection con =DriverManager.getConnection(url, username, password);
+    DbConnect DB = new DbConnect();
+    Connection con = DB.getConnection();
 
    String cert_id = "";
    String action  = "";
